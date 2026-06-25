@@ -438,6 +438,7 @@ export class DynamicChart
         if (!chartConfig || !this.chart) {
             return;
         }
+        
 
         let option: EChartsOption;
 
