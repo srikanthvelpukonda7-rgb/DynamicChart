@@ -118,6 +118,8 @@ export class DynamicChart
     private renderToken = 0;
     private lastConfig = "";
 
+
+    /*
     public init(
         context: ComponentFramework.Context<IInputs>,
         notifyOutputChanged: () => void,
@@ -138,10 +140,59 @@ export class DynamicChart
             this.handleResize
         );
     }
+        */
+
+
+
+    public init(
+        context: ComponentFramework.Context<IInputs>,
+        notifyOutputChanged: () => void,
+        state: ComponentFramework.Dictionary,
+        container: HTMLDivElement
+    ): void {
+
+        this.container = container;
+
+        // Container sizing
+        this.container.style.width = "100%";
+        this.container.style.height = "100%";
+        this.container.style.minHeight = "100px";
+        this.container.style.boxSizing = "border-box";
+
+        // Positioning
+        this.container.style.position = "relative";
+        this.container.style.overflow = "hidden";
+
+        // Stacking order
+        this.container.style.zIndex = "1";
+
+        // Optional background
+        this.container.style.backgroundColor = "transparent";
+
+        // Initialize chart
+        this.chart = echarts.init(this.container);
+
+        // Resize handler
+        window.addEventListener(
+            "resize",
+            this.handleResize
+        );
+    }
+
+
 
     public updateView(
         context: ComponentFramework.Context<IInputs>
     ): void {
+
+
+
+        const chartHeight =
+            context.parameters.ChartHeight.raw ?? 100;
+
+        this.container.style.height = `${chartHeight}px`;
+
+        this.chart?.resize();
 
         const chartConfig =
             context.parameters.ChartConfig.raw;
@@ -165,10 +216,7 @@ export class DynamicChart
 
         } catch (error) {
 
-            console.error(
-                "Invalid chart JSON:",
-                error
-            );
+            console.error("Invalid chart JSON:", error);
 
             console.error(
                 "Raw JSON:",
